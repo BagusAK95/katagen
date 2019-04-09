@@ -3,7 +3,7 @@
 /*
     type TrainingConfig {
         projectId: string;
-        trait: string; // e.g "traitEntity.pos"
+        traitList: string[]; // e.g "traitEntity.pos"
         wordList : string[][];      // e.g [["aku", "saya", "kamu", "bagus"], ["noob", "cupu"]]
         defaultLabelList: string[]; // e.g ["entity.person", "entity.status"]
         wordLabel?: {[word: string]: string}; // This will override defaultTagList, e.g {"bagus": "entity.specific-person"}
@@ -33,42 +33,48 @@ class GeneratorController {
         response.send(result)
     }
 
-    getSentences(wordList, sentences = [""]) {
+    getSentenceTokenList(wordList, sentenceTokenList = [[null]]) {
         if (wordList.length === 0) {
-            return sentences.map((sentence) => sentence.trim());
+            return sentenceTokenList;
         }
-        const newSentences = [];
+        const newSentenceTokenList = [];
         const currentWordVariations = wordList[0];
         const newWordList = wordList.slice(1);
-        sentences.forEach((sentence) => {
+        sentenceTokenList.forEach((sentenceToken) => {
             currentWordVariations.forEach((word) => {
-                newSentences.push(`${sentence} ${word}`);
+                const newSentenceToken = sentenceToken[0] === null ? [] : sentenceToken.slice();
+                newSentenceToken.push(word);
+                newSentenceTokenList.push(newSentenceToken);
             });
         });
-        return this.getSentences(newWordList, newSentences);
+        return this.getSentenceTokenList(newWordList, newSentenceTokenList);
     }
 
     generateTrainingList(trainingConfig) {
         trainingConfig = Object.assign({
-            wordLabel : {},
+            wordLabel: {},
+            traitList: [],
         }, trainingConfig);
         const { wordList } = trainingConfig;
-        const sentences = this.getSentences(wordList);
-        const trainingList = sentences.map((sentence) => {
-            return { input: sentence}
+        const sentenceTokenList = this.getSentenceTokenList(wordList);
+        const trainingList = sentenceTokenList.map((sentenceToken) => {
+            return { tokens: sentenceToken}
         });
-        //console.log(trainingList);
         return trainingList;
     }
 
     completeTrainingList(trainingConfig, trainingList) {
         return trainingList.map((training) => {
             // split sentence into tokens
-            const input = training.input;
-            const tokens = input.split(" ");
+            const { tokens } = training;
+            const { defaultLabelList } = trainingConfig;
+            const input = tokens.filter((token) => token != "").join(" ");
             // set label for each token based on wordLabel or defaultLabelList
             const entities = [];
             tokens.forEach((token, tokenIndex) => {
+                if (token == "") {
+                    return null;
+                }
                 const start = input.indexOf(token);
                 const end = start + token.length;
                 const value = token;
@@ -76,23 +82,25 @@ class GeneratorController {
                 // get entity and label for token
                 let entity, label;
                 // if the token is special (exist in wordLabel) than use entity & label from trainingConfig.wordLabel.
-                // otherwise, use defaultLabelList instead
                 if (token in trainingConfig.wordLabel) {
                     [entity, label] = trainingConfig.wordLabel[token].split(".");
-                } else {
+                    return entities.push({ id, entity, label, start, end, value });
+                } 
+                // otherwise, if defaultLabelList[tokenIndex] exists, use it instead
+                if (defaultLabelList[tokenIndex]) {
                     [entity, label] = trainingConfig.defaultLabelList[tokenIndex].split(".");
+                    return entities.push({ id, entity, label, start, end, value });
                 }
-                entities.push({ id, entity, label, start, end, value });
             });
             // add entities based on trait
-            if (trainingConfig.trait) {
+            trainingConfig.traitList.forEach((trait) => {
                 const start = 0;
                 const end = input.length;
                 const id = entities.length;
-                const [entity, label] = trainingConfig.trait.split(".")
+                const [entity, label] = trait.split(".")
                 const value = label;
                 entities.push({ id, entity, label, start, end, value });
-            };
+            });
             return { input, entities};
         });
     }
