@@ -1,7 +1,7 @@
 'use strict'
 
 class GeneratorController {
-    async generateTrainingList({ request, response }) {
+    async generate({ request, response }) {
 
     }
 
