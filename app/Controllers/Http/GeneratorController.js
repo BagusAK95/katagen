@@ -20,11 +20,13 @@ class GeneratorController {
 
         for (let i = wordList.length - 1; i >= 0; i--) {
             if (i == wordList.length - 1) {
-                strFunc = 'for (const word' + i + ' of wordList[' + i + ']) {\n result.push({ input: ' + strJoin.join(' + " " + ') + ', entities:[] }) \n}'
+                strFunc = 'for (const word' + i + ' of wordList[' + i + ']) {\n result.push({ input: (' + strJoin.join(' + " " + ') + ').trim(), entities:[] }) \n}'
             } else {
                 strFunc = 'for (const word' + i + ' of wordList[' + i + ']) {\n' + strFunc + '\n}'
             }
         }
+
+        console.log(strFunc)
 
         eval(strFunc)
 
