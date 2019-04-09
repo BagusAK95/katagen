@@ -49,6 +49,9 @@ class GeneratorController {
     }
 
     generateTrainingList(trainingConfig) {
+        trainingConfig = Object.assign({
+            wordLabel : {},
+        }, trainingConfig);
         const { wordList } = trainingConfig;
         const sentences = this.getSentences(wordList);
         const trainingList = sentences.map((sentence) => {
@@ -87,7 +90,7 @@ class GeneratorController {
                 const start = 0;
                 const end = input.length;
                 const id = entities.length;
-                const [entity, label] = trainingConfig.trait
+                const [entity, label] = trainingConfig.trait.split(".")
                 const value = label;
                 entities.push({ id, entity, label, start, end, value });
             };
