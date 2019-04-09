@@ -26,8 +26,6 @@ class GeneratorController {
             }
         }
 
-        console.log(strFunc)
-
         eval(strFunc)
 
         return result
