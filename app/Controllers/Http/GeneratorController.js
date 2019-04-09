@@ -33,6 +33,19 @@ class GeneratorController {
         response.send(result)
     }
 
+    getSentences(wordList, sentences = []) {
+        if (wordList.length === 0) {
+            return sentences;
+        }
+        const newSentences = [];
+        const currentWordVariations = wordList[0];
+        const newWordList = wordList.slice(1);
+        sentences.forEach((sentence) => {
+            currentWordVariations.forEach((word) => {
+            });
+        });
+    }
+
     generateTrainingList(trainingConfig) {
         const { wordList } = trainingConfig
 
@@ -87,7 +100,6 @@ class GeneratorController {
                  const [entity, label] = trainingConfig.trait
                  const value = label;
                  entities.push({ id, entity, label, start, end, value });
-             });
              }
          });
     }
