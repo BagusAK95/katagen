@@ -29,7 +29,7 @@
 class GeneratorController {
     async generate({ request, response }) {
         const trainingConfig = request.body
-        const result = this.generateTrainingList(trainingConfig)
+        const result = this.completeTrainingList(trainingConfig, this.generateTrainingList(trainingConfig));
         response.send(result)
     }
 
