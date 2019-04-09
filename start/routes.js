@@ -20,6 +20,4 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.post('/login', 'UserController.login')
-
-Route.get('/projects', 'ProjectController.list')
+Route.get('/generate', 'GeneratorController.generate')
