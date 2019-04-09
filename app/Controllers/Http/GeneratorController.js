@@ -69,7 +69,6 @@ class GeneratorController {
             // set label for each token based on wordLabel or defaultLabelList
             const entities = [];
             tokens.forEach((token, tokenIndex) => {
-                console.error({token, tokenIndex});
                 const start = input.indexOf(token);
                 const end = start + token.length;
                 const value = token;
