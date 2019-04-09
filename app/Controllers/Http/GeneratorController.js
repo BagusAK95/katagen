@@ -54,37 +54,37 @@ class GeneratorController {
     }
 
     completeTrainingList(trainingConfig, trainingList) {
-         return trainingList.map((training) => {
-             // split sentence into tokens
-             const tokens = training.input.split(" ");
-             // set label for each token based on wordLabel or defaultLabelList
-             const entities = [];
-             tokens.forEach((token, tokenIndex) => {
-                 const start = training.input.indexOf(token);
-                 const end = start + token.length;
-                 const value = token;
-                 const id = tokenIndex;
-                 // get entity and label for token
-                 let entity, label;
-                 // if the token is special (exist in wordLabel) than use entity & label from trainingConfig.wordLabel.
-                 // otherwise, use defaultLabelList instead
-                 if (token in trainingConfig.wordLabel) {
-                     [entity, label] = trainingConfig.wordLabel[token].split(".");
-                 } else {
-                     [entity, label] = trainingConfig.defaultLabelList[tokenIndex];
-                 }
-                 entities.push({ id, entity, label, start, end, value });
-             });
-             // add entities based on trait
-             if (trainingConfig.trait) {
-                 const start = 0;
-                 const end = training.input.length;
-                 const id = entities.length;
-                 const [entity, label] = trainingConfig.trait
-                 const value = label;
-                 entities.push({ id, entity, label, start, end, value });
-             }
-         });
+        return trainingList.map((training) => {
+            // split sentence into tokens
+            const tokens = training.input.split(" ");
+            // set label for each token based on wordLabel or defaultLabelList
+            const entities = [];
+            tokens.forEach((token, tokenIndex) => {
+                const start = training.input.indexOf(token);
+                const end = start + token.length;
+                const value = token;
+                const id = tokenIndex;
+                // get entity and label for token
+                let entity, label;
+                // if the token is special (exist in wordLabel) than use entity & label from trainingConfig.wordLabel.
+                // otherwise, use defaultLabelList instead
+                if (token in trainingConfig.wordLabel) {
+                    [entity, label] = trainingConfig.wordLabel[token].split(".");
+                } else {
+                    [entity, label] = trainingConfig.defaultLabelList[tokenIndex];
+                }
+                entities.push({ id, entity, label, start, end, value });
+            });
+            // add entities based on trait
+            if (trainingConfig.trait) {
+                const start = 0;
+                const end = training.input.length;
+                const id = entities.length;
+                const [entity, label] = trainingConfig.trait
+                const value = label;
+                entities.push({ id, entity, label, start, end, value });
+            };
+        });
     }
 }
 
