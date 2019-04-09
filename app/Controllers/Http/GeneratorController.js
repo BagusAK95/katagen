@@ -42,32 +42,15 @@ class GeneratorController {
         const newWordList = wordList.slice(1);
         sentences.forEach((sentence) => {
             currentWordVariations.forEach((word) => {
+                newSentences.push(`${sentence} ${word}`);
             });
         });
+        return this.getSentences(wordList, sentences);
     }
 
     generateTrainingList(trainingConfig) {
-        const { wordList } = trainingConfig
-
-        const result = [];
-        let strFunc = '';
-        let strJoin = [];
-
-        for (let i = 0; i < wordList.length; i++) {
-            strJoin.push('word' + i)
-        }
-
-        for (let i = wordList.length - 1; i >= 0; i--) {
-            if (i == wordList.length - 1) {
-                strFunc = 'for (const word' + i + ' of wordList[' + i + ']) {\n result.push({ input: (' + strJoin.join(' + " " + ') + ').trim(), entities:[] }) \n}'
-            } else {
-                strFunc = 'for (const word' + i + ' of wordList[' + i + ']) {\n' + strFunc + '\n}'
-            }
-        }
-
-        eval(strFunc)
-
-        return result
+        const { wordList } = trainingConfig;
+        return this.getSentences(wordList);
     }
 
     completeTrainingList(trainingConfig, trainingList) {
