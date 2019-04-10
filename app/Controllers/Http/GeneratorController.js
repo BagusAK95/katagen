@@ -28,13 +28,9 @@
 
 class GeneratorController {
     async generate({ request, response }) {
-        const trainingConfig = request.body
+        const trainingConfig = request.body;
         const result = this.completeTrainingList(trainingConfig, this.generateTrainingList(trainingConfig));
-        response.send(result)
-    }
-
-    async apply({ request, response }) {
-        response.send("noob");
+        response.send(result);
     }
 
     getSentenceTokenList(wordList, sentenceTokenList = [[null]]) {

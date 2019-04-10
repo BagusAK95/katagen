@@ -17,9 +17,7 @@
 const Route = use('Route');
 
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
+  return { greeting: 'Hello world in JSON' };
 })
 
 Route.post('/generate', 'GeneratorController.generate');
-
-Route.post('/apply', 'GeneratorController.apply');
