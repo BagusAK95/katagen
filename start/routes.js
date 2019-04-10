@@ -14,10 +14,12 @@
 */
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
-const Route = use('Route')
+const Route = use('Route');
 
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.post('/generate', 'GeneratorController.generate')
+Route.post('/generate', 'GeneratorController.generate');
+
+Route.post('/apply', 'GeneratorController.apply');

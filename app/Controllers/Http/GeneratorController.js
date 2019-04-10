@@ -33,6 +33,10 @@ class GeneratorController {
         response.send(result)
     }
 
+    async apply({ request, response }) {
+        response.send("noob");
+    }
+
     getSentenceTokenList(wordList, sentenceTokenList = [[null]]) {
         if (wordList.length === 0) {
             return sentenceTokenList;
